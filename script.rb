@@ -1,34 +1,29 @@
 require './scraper'
+require './scraper_sitemap'
 
-# Creates a new instance of the Scraper class.
-scraper = Scraper.new
+scraper = ScraperSitemap.new
 
-# Scrapes car data from multiple links.
-#
-# @return [Array<Hash>] an array of hashes containing car data.
 start_time = Time.now
-cars = scraper.scrape_data_parallel
+cars = scraper.scrape_data_sitemap_parallel
 
-# Display additional info about scraping
 end_time = Time.now
-elapsed_time = end_time - start_time
-puts "Czas wykonania (scrapowania): #{elapsed_time} sekund"
+time = end_time - start_time
+
+# Display additional info
+puts "Czas wykonania (scrapowania): #{time} sekund"
 puts "Ilość aut: #{cars.length()}"
 
-# Saves the scraped car data to a CSV file.
-#
-# @param cars [Array<Hash>] an array of hashes containing car data.
-start_time = Time.now
+# Sort by links
+cars = cars.compact.sort_by { |hash| hash['Link'] if hash.is_a?(Hash) }
 
-# Sort cars by link
-cars = cars.sort_by { |hash| hash['Link'] if hash.is_a?(Hash) }
-scraper.save_to_csv(cars)
-end_time = Time.now
-elapsed_time = end_time - start_time
-puts "Czas wykonania (zapisywania): #{elapsed_time} sekund"
+# Save data (append to existing data)
+scraper.append_and_save_to_csv(cars)
 
 # index 0 -> 25
-#index 1 -> 412
+# index 1 -> 412
 # 0 .. 5 -> 2064
-# 0 .. 10  -> 4791
-
+# 0 .. 10  -> 4803
+# 11 .. 20 -> 5245
+# 21 .. 30 -> 4893
+# 31 .. 40 -> 6464
+# Wszystkie: 29490

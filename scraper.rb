@@ -60,14 +60,14 @@ class Scraper
       return response.body
     rescue => e
       attempts += 1
-      @logger.error("Attempt #{attempts}: #{e.message} for URL #{self.base_link + link}")
+      @logger.error("Attempt #{attempts}: #{e.message} for URL #{link}")
 
       if attempts < max_retries
         @logger.info("Retrying...")
         sleep(2)  
         retry
       else
-        @logger.error("All retry attempts failed for URL #{self.base_link + link}")
+        @logger.error("All retry attempts failed for URL #{link}")
         raise "HTTP request failed after #{max_retries} attempts"
       end
     end
@@ -97,35 +97,6 @@ class Scraper
     end
   end
 
-  # Scrapes car data from multiple links
-  #
-  # @return [Array<Hash>] an array of hashes containing car data.
-  def scrape_data()
-    cars = []
-    begin
-      brands = read_all_brands()
-      brands = brands[0..1]
-      
-      brands.each do |brand|
-        links_to_visit = find_links(brand)
-        while links_to_visit.any?
-          link = links_to_visit.pop
-          new_links = find_links(link)
-
-          if new_links.nil? || new_links.empty?
-            car_data = scrape_car_data(link)
-            cars.push(car_data)
-          else
-            links_to_visit.concat(new_links)
-          end
-        end
-      end
-      return cars
-    rescue StandardError => e
-      @logger.error('Error occur while scraping data')
-    end
-  end
-
   # Scrapes car data from multiple links. Use parallel processing.
   # Use threads to speed up scraping.
   #
@@ -137,6 +108,7 @@ class Scraper
     i = 0 
     
     begin
+      existing_links = load_existing_links('cars_data.csv')
       brands = read_all_brands()
 
       if brands.empty? || brands.nil? || !brands.is_a?(Array)
@@ -156,36 +128,38 @@ class Scraper
         links_to_visit = find_links(model)
 
         if links_to_visit.nil? || links_to_visit.empty?
-          car_data = scrape_car_data(model)
-          mutex.synchronize do
-             cars.push(car_data) 
+          if !existing_links.include?(self.base_link+model)
+            car_data = scrape_car_data(model)
+            mutex.synchronize do
+              cars.push(car_data) 
+            end
+            mutex.synchronize { i+=1}
+            puts i
+            next
           end
-          mutex.synchronize { i+=1}
-          puts i
-          next
         end
         
         while links_to_visit.any?
-            link = nil
-            mutex.synchronize { link = links_to_visit.pop }
-            next unless link 
-            begin 
-              new_links = find_links(link) || []
+          link = nil
+          mutex.synchronize { link = links_to_visit.pop }
+          next unless link 
+          begin 
+            new_links = find_links(link) || []
       
-              if new_links.empty?
-                car_data = scrape_car_data(link)
-                mutex.synchronize { cars.push(car_data) }
-                mutex.synchronize { i+=1}
-                puts i
-              else
-                mutex.synchronize { links_to_visit.concat(new_links) }
-              end
-            rescue StandardError => e
-              @logger.error("Some error occur while finding links: #{new_links}")
+            if new_links.empty? && !existing_links.include?(self.base_link+link)
+              car_data = scrape_car_data(link)
+              mutex.synchronize { cars.push(car_data) }
+              mutex.synchronize { i+=1}
+              puts i
+            else
+              mutex.synchronize { links_to_visit.concat(new_links) }
             end
+          rescue StandardError => e
+            @logger.error("Some error occur while finding links: #{new_links}")
           end
         end
       end
+    end
       threads.each(&:join) 
       return cars
     rescue StandardError => e
@@ -292,11 +266,49 @@ class Scraper
     car.each { |name, value| puts name + ' : ' + value }
   end
 
+  # Append car data to existing csv file
+  #
+  # @param cars [Array<Hash>] an array of hashes containing car data.
+  def append_and_save_to_csv(cars)
+    filename = 'cars_data.csv'
+    csv_headers = []
+  
+    if cars.empty?
+      @logger.warn('No data to save. Variable cars is empty')
+      raise "No data to save"
+      return
+    end
+  
+    begin
+      largest_hash = cars.max_by { |car| car.keys.size }
+  
+      largest_hash.each_key do |name|
+        csv_headers.push(name)
+      end
+  
+      file_exists = File.exist?(filename)
+  
+      CSV.open(filename, 'a+', write_headers: !file_exists, headers: csv_headers) do |csv|
+        unless file_exists
+          csv << csv_headers
+        end
+  
+        cars.each do |car|
+          row = csv_headers.map { |header| car[header] || '' }
+          csv << row
+        end
+      end
+      @logger.info("Data successfully saved to #{filename}")
+    rescue StandardError => e
+      @logger.error("Error while saving to CSV file: #{e.message}")
+    end
+  end
+
   # Saves car data to a CSV file.
   #
   # @param cars [Array<Hash>] an array of hashes containing car data.
   def save_to_csv(cars)
-    filename = 'cars_data_test.csv'
+    filename = 'cars_data.csv'
     csv_headers = []
 
     if cars.empty?
@@ -306,9 +318,12 @@ class Scraper
     end
 
     begin
-      cars[0].each_key do |name|
+      largest_hash = cars.max_by { |car| car.keys.size }
+
+      largest_hash.each_key do |name|
         csv_headers.push(name)
       end
+
       # Save the data to a CSV file.
       CSV.open(filename, 'wb', write_headers: true, headers: csv_headers) do |csv|
         cars.each do |car|
@@ -321,4 +336,24 @@ class Scraper
       @logger.error("Error while saving to csv file: #{e.message}")
     end
   end
+
+  # Loads car data from a CSV file.
+  #
+  # @param filename [String] the name of the CSV file to load.
+  # @return [Array<Hash>] an array of hashes, where each hash represents a car.
+  def load_from_csv(filename)
+    begin
+      rows = []
+      CSV.foreach(filename, encoding: 'UTF-8') do |row|
+        rows << row.to_s.split(',')
+      end
+      @logger.info("Data successfully loaded from #{filename}")
+      return rows
+    rescue StandardError => e
+      @logger.error("Error while loading from csv file: #{e.message}")
+      return []
+    end
+  end
 end
+
+

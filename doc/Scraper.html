@@ -191,6 +191,30 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#append_and_save_to_csv-instance_method" title="#append_and_save_to_csv (instance method)">#<strong>append_and_save_to_csv</strong>(cars)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Append car data to existing csv file.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#display_car_data-instance_method" title="#display_car_data (instance method)">#<strong>display_car_data</strong>(car)  &#x21d2; Object </a>
     
 
@@ -230,7 +254,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>The response object from the HTTP request if successful.</p>
+<p>Fetches data from the given link, retrying up to 3 times in case of failure.</p>
 </div></span>
   
 </li>
@@ -281,6 +305,30 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Initializes a new Scraper instance.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#load_from_csv-instance_method" title="#load_from_csv (instance method)">#<strong>load_from_csv</strong>(filename)  &#x21d2; Array&lt;Hash&gt; </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Loads car data from a CSV file.</p>
 </div></span>
   
 </li>
@@ -377,30 +425,6 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Scrapes data for a specific car.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#scrape_data-instance_method" title="#scrape_data (instance method)">#<strong>scrape_data</strong>  &#x21d2; Array&lt;Hash&gt; </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Scrapes car data from multiple links.</p>
 </div></span>
   
 </li>
@@ -689,7 +713,130 @@
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="display_car_data-instance_method">
+  <h3 class="signature first" id="append_and_save_to_csv-instance_method">
+  
+    #<strong>append_and_save_to_csv</strong>(cars)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Append car data to existing csv file</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>cars</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;Hash&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>an array of hashes containing car data.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'scraper.rb', line 272</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_append_and_save_to_csv'>append_and_save_to_csv</span><span class='lparen'>(</span><span class='id identifier rubyid_cars'>cars</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_filename'>filename</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cars_data.csv</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_csv_headers'>csv_headers</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_cars'>cars</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+    <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>No data to save. Variable cars is empty</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>No data to save</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>return</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>begin</span>
+    <span class='id identifier rubyid_largest_hash'>largest_hash</span> <span class='op'>=</span> <span class='id identifier rubyid_cars'>cars</span><span class='period'>.</span><span class='id identifier rubyid_max_by'>max_by</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_car'>car</span><span class='op'>|</span> <span class='id identifier rubyid_car'>car</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='rbrace'>}</span>
+
+    <span class='id identifier rubyid_largest_hash'>largest_hash</span><span class='period'>.</span><span class='id identifier rubyid_each_key'>each_key</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='op'>|</span>
+      <span class='id identifier rubyid_csv_headers'>csv_headers</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+
+    <span class='id identifier rubyid_file_exists'>file_exists</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span>
+
+    <span class='const'>CSV</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>a+</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>write_headers:</span> <span class='op'>!</span><span class='id identifier rubyid_file_exists'>file_exists</span><span class='comma'>,</span> <span class='label'>headers:</span> <span class='id identifier rubyid_csv_headers'>csv_headers</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_csv'>csv</span><span class='op'>|</span>
+      <span class='kw'>unless</span> <span class='id identifier rubyid_file_exists'>file_exists</span>
+        <span class='id identifier rubyid_csv'>csv</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_csv_headers'>csv_headers</span>
+      <span class='kw'>end</span>
+
+      <span class='id identifier rubyid_cars'>cars</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_car'>car</span><span class='op'>|</span>
+        <span class='id identifier rubyid_row'>row</span> <span class='op'>=</span> <span class='id identifier rubyid_csv_headers'>csv_headers</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_header'>header</span><span class='op'>|</span> <span class='id identifier rubyid_car'>car</span><span class='lbracket'>[</span><span class='id identifier rubyid_header'>header</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span>
+        <span class='id identifier rubyid_csv'>csv</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_row'>row</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+    <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Data successfully saved to </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_filename'>filename</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='kw'>rescue</span> <span class='const'>StandardError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+    <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Error while saving to CSV file: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_message'>message</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="display_car_data-instance_method">
   
     #<strong>display_car_data</strong>(car)  &#x21d2; <tt>Object</tt> 
   
@@ -734,12 +881,12 @@
       <pre class="lines">
 
 
-293
-294
-295</pre>
+265
+266
+267</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'scraper.rb', line 293</span>
+      <pre class="code"><span class="info file"># File 'scraper.rb', line 265</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_display_car_data'>display_car_data</span><span class='lparen'>(</span><span class='id identifier rubyid_car'>car</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_car'>car</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='op'>|</span> <span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_name'>name</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> : </span><span class='tstring_end'>&#39;</span></span> <span class='op'>+</span> <span class='id identifier rubyid_value'>value</span> <span class='rbrace'>}</span>
@@ -761,7 +908,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns The response object from the HTTP request if successful.</p>
+<p>Fetches data from the given link, retrying up to 3 times in case of failure.</p>
 
 
   </div>
@@ -879,14 +1026,14 @@
     <span class='kw'>return</span> <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_body'>body</span>
   <span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
     <span class='id identifier rubyid_attempts'>attempts</span> <span class='op'>+=</span> <span class='int'>1</span>
-    <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Attempt </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_attempts'>attempts</span><span class='embexpr_end'>}</span><span class='tstring_content'>: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_message'>message</span><span class='embexpr_end'>}</span><span class='tstring_content'> for URL </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_base_link'>base_link</span> <span class='op'>+</span> <span class='id identifier rubyid_link'>link</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Attempt </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_attempts'>attempts</span><span class='embexpr_end'>}</span><span class='tstring_content'>: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_message'>message</span><span class='embexpr_end'>}</span><span class='tstring_content'> for URL </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_link'>link</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 
     <span class='kw'>if</span> <span class='id identifier rubyid_attempts'>attempts</span> <span class='op'>&lt;</span> <span class='id identifier rubyid_max_retries'>max_retries</span>
       <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Retrying...</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
       <span class='id identifier rubyid_sleep'>sleep</span><span class='lparen'>(</span><span class='int'>2</span><span class='rparen'>)</span>  
       <span class='kw'>retry</span>
     <span class='kw'>else</span>
-      <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>All retry attempts failed for URL </span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_base_link'>base_link</span> <span class='op'>+</span> <span class='id identifier rubyid_link'>link</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+      <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>All retry attempts failed for URL </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_link'>link</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
       <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>HTTP request failed after </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_max_retries'>max_retries</span><span class='embexpr_end'>}</span><span class='tstring_content'> attempts</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
@@ -960,37 +1107,37 @@
       <pre class="lines">
 
 
-203
-204
-205
-206
-207
-208
-209
-210
-211
-212
-213
-214
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229
-230</pre>
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'scraper.rb', line 203</span>
+      <pre class="code"><span class="info file"># File 'scraper.rb', line 175</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find_links'>find_links</span><span class='lparen'>(</span><span class='id identifier rubyid_link'>link</span><span class='rparen'>)</span>
   <span class='kw'>begin</span> 
@@ -1018,6 +1165,105 @@
     <span class='kw'>return</span> <span class='id identifier rubyid_data'>data</span>
   <span class='kw'>rescue</span> <span class='const'>StandardError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
     <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Error while scraping brands: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_message'>message</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="load_from_csv-instance_method">
+  
+    #<strong>load_from_csv</strong>(filename)  &#x21d2; <tt>Array&lt;Hash&gt;</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Loads car data from a CSV file.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>filename</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name of the CSV file to load.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;Hash&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>an array of hashes, where each hash represents a car.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'scraper.rb', line 344</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_load_from_csv'>load_from_csv</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span>
+  <span class='kw'>begin</span>
+    <span class='id identifier rubyid_rows'>rows</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+    <span class='const'>CSV</span><span class='period'>.</span><span class='id identifier rubyid_foreach'>foreach</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='comma'>,</span> <span class='label'>encoding:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>UTF-8</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_row'>row</span><span class='op'>|</span>
+      <span class='id identifier rubyid_rows'>rows</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_row'>row</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>,</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+    <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Data successfully loaded from </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_filename'>filename</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_rows'>rows</span>
+  <span class='kw'>rescue</span> <span class='const'>StandardError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+    <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Error while loading from csv file: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_message'>message</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='kw'>return</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1294,23 +1540,23 @@
       <pre class="lines">
 
 
-236
-237
-238
-239
-240
-241
-242
-243
-244
-245
-246
-247
-248
-249</pre>
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'scraper.rb', line 236</span>
+      <pre class="code"><span class="info file"># File 'scraper.rb', line 208</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_cars_from_engine_box'>read_cars_from_engine_box</span><span class='lparen'>(</span><span class='id identifier rubyid_document'>document</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_a_elements'>a_elements</span> <span class='op'>=</span> <span class='id identifier rubyid_document'>document</span><span class='period'>.</span><span class='id identifier rubyid_xpath'>xpath</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>//div[contains(@class, &#39;engine-box&#39;)]/a</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1377,16 +1623,6 @@
       <pre class="lines">
 
 
-300
-301
-302
-303
-304
-305
-306
-307
-308
-309
 310
 311
 312
@@ -1402,13 +1638,26 @@
 322
 323
 324
-325</pre>
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'scraper.rb', line 300</span>
+      <pre class="code"><span class="info file"># File 'scraper.rb', line 310</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_save_to_csv'>save_to_csv</span><span class='lparen'>(</span><span class='id identifier rubyid_cars'>cars</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_filename'>filename</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cars_data_test.csv</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_filename'>filename</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cars_data.csv</span><span class='tstring_end'>&#39;</span></span>
   <span class='id identifier rubyid_csv_headers'>csv_headers</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
 
   <span class='kw'>if</span> <span class='id identifier rubyid_cars'>cars</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
@@ -1418,9 +1667,12 @@
   <span class='kw'>end</span>
 
   <span class='kw'>begin</span>
-    <span class='id identifier rubyid_cars'>cars</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each_key'>each_key</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='op'>|</span>
+    <span class='id identifier rubyid_largest_hash'>largest_hash</span> <span class='op'>=</span> <span class='id identifier rubyid_cars'>cars</span><span class='period'>.</span><span class='id identifier rubyid_max_by'>max_by</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_car'>car</span><span class='op'>|</span> <span class='id identifier rubyid_car'>car</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='rbrace'>}</span>
+
+    <span class='id identifier rubyid_largest_hash'>largest_hash</span><span class='period'>.</span><span class='id identifier rubyid_each_key'>each_key</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='op'>|</span>
       <span class='id identifier rubyid_csv_headers'>csv_headers</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
+
     <span class='comment'># Save the data to a CSV file.
 </span>    <span class='const'>CSV</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>wb</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>write_headers:</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='label'>headers:</span> <span class='id identifier rubyid_csv_headers'>csv_headers</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_csv'>csv</span><span class='op'>|</span>
       <span class='id identifier rubyid_cars'>cars</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_car'>car</span><span class='op'>|</span>
@@ -1531,43 +1783,43 @@
       <pre class="lines">
 
 
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
 255
 256
 257
 258
 259
-260
-261
-262
-263
-264
-265
-266
-267
-268
-269
-270
-271
-272
-273
-274
-275
-276
-277
-278
-279
-280
-281
-282
-283
-284
-285
-286
-287
-288</pre>
+260</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'scraper.rb', line 255</span>
+      <pre class="code"><span class="info file"># File 'scraper.rb', line 227</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_scrape_car_data'>scrape_car_data</span><span class='lparen'>(</span><span class='id identifier rubyid_car_link'>car_link</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_car'>car</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -1601,140 +1853,6 @@
     <span class='kw'>return</span> <span class='id identifier rubyid_car'>car</span>
   <span class='kw'>rescue</span> <span class='const'>StandardError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
     <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Error while scraping car data: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_message'>message</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="scrape_data-instance_method">
-  
-    #<strong>scrape_data</strong>  &#x21d2; <tt>Array&lt;Hash&gt;</tt> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Scrapes car data from multiple links</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>Array&lt;Hash&gt;</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>an array of hashes containing car data.</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div>
-<div class="tags">
-  <h3>Specifications:</h3>
-  <ul class="specs">
-    
-      <li>returns an array of Car objects
-        <div class="source_code">
-          <table>
-            <tr>
-              <td>
-                <pre class="lines">
-
-
-50
-51
-52</pre>
-              </td>
-              <td>
-                <pre class="code"><span class="info file"># File 'spec/scraper_spec.rb', line 50</span>
-
-<span class='id identifier rubyid_cars'>cars</span> <span class='op'>=</span> <span class='id identifier rubyid_scraper'>scraper</span><span class='period'>.</span><span class='id identifier rubyid_scrape_data'>scrape_data</span>
-<span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_cars'>cars</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_an'>be_an</span><span class='lparen'>(</span><span class='const'>Array</span><span class='rparen'>)</span>
-<span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_cars'>cars</span><span class='period'>.</span><span class='id identifier rubyid_all?'>all?</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_car'>car</span><span class='op'>|</span> <span class='id identifier rubyid_car'>car</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span> <span class='rbrace'>}</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be'>be</span> <span class='kw'>true</span></pre>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </li>
-    
-  </ul>
-</div>
-<table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'scraper.rb', line 103</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_scrape_data'>scrape_data</span><span class='lparen'>(</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_cars'>cars</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-  <span class='kw'>begin</span>
-    <span class='id identifier rubyid_brands'>brands</span> <span class='op'>=</span> <span class='id identifier rubyid_read_all_brands'>read_all_brands</span><span class='lparen'>(</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_brands'>brands</span> <span class='op'>=</span> <span class='id identifier rubyid_brands'>brands</span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='int'>1</span><span class='rbracket'>]</span>
-    
-    <span class='id identifier rubyid_brands'>brands</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_brand'>brand</span><span class='op'>|</span>
-      <span class='id identifier rubyid_links_to_visit'>links_to_visit</span> <span class='op'>=</span> <span class='id identifier rubyid_find_links'>find_links</span><span class='lparen'>(</span><span class='id identifier rubyid_brand'>brand</span><span class='rparen'>)</span>
-      <span class='kw'>while</span> <span class='id identifier rubyid_links_to_visit'>links_to_visit</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span>
-        <span class='id identifier rubyid_link'>link</span> <span class='op'>=</span> <span class='id identifier rubyid_links_to_visit'>links_to_visit</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
-        <span class='id identifier rubyid_new_links'>new_links</span> <span class='op'>=</span> <span class='id identifier rubyid_find_links'>find_links</span><span class='lparen'>(</span><span class='id identifier rubyid_link'>link</span><span class='rparen'>)</span>
-
-        <span class='kw'>if</span> <span class='id identifier rubyid_new_links'>new_links</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_new_links'>new_links</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
-          <span class='id identifier rubyid_car_data'>car_data</span> <span class='op'>=</span> <span class='id identifier rubyid_scrape_car_data'>scrape_car_data</span><span class='lparen'>(</span><span class='id identifier rubyid_link'>link</span><span class='rparen'>)</span>
-          <span class='id identifier rubyid_cars'>cars</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_car_data'>car_data</span><span class='rparen'>)</span>
-        <span class='kw'>else</span>
-          <span class='id identifier rubyid_links_to_visit'>links_to_visit</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='id identifier rubyid_new_links'>new_links</span><span class='rparen'>)</span>
-        <span class='kw'>end</span>
-      <span class='kw'>end</span>
-    <span class='kw'>end</span>
-    <span class='kw'>return</span> <span class='id identifier rubyid_cars'>cars</span>
-  <span class='kw'>rescue</span> <span class='const'>StandardError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
-    <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Error occur while scraping data</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1817,6 +1935,35 @@
       <pre class="lines">
 
 
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
 133
 134
 135
@@ -1853,38 +2000,10 @@
 166
 167
 168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197</pre>
+169</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'scraper.rb', line 133</span>
+      <pre class="code"><span class="info file"># File 'scraper.rb', line 104</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_scrape_data_parallel'>scrape_data_parallel</span>
   <span class='id identifier rubyid_mutex'>mutex</span> <span class='op'>=</span> <span class='const'>Mutex</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1893,6 +2012,7 @@
   <span class='id identifier rubyid_i'>i</span> <span class='op'>=</span> <span class='int'>0</span> 
   
   <span class='kw'>begin</span>
+    <span class='id identifier rubyid_existing_links'>existing_links</span> <span class='op'>=</span> <span class='id identifier rubyid_load_existing_links'>load_existing_links</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cars_data.csv</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
     <span class='id identifier rubyid_brands'>brands</span> <span class='op'>=</span> <span class='id identifier rubyid_read_all_brands'>read_all_brands</span><span class='lparen'>(</span><span class='rparen'>)</span>
 
     <span class='kw'>if</span> <span class='id identifier rubyid_brands'>brands</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span> <span class='op'>||</span> <span class='id identifier rubyid_brands'>brands</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='op'>!</span><span class='id identifier rubyid_brands'>brands</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Array</span><span class='rparen'>)</span>
@@ -1904,8 +2024,7 @@
     <span class='id identifier rubyid_models'>models</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
   
     <span class='id identifier rubyid_brands'>brands</span><span class='period'>.</span><span class='id identifier rubyid_each_with_index'>each_with_index</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_brand'>brand</span><span class='comma'>,</span> <span class='id identifier rubyid_index'>index</span><span class='op'>|</span>
-      <span class='comment'>#next if index!= 1
-</span>      <span class='id identifier rubyid_models'>models</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='id identifier rubyid_find_links'>find_links</span><span class='lparen'>(</span><span class='id identifier rubyid_brand'>brand</span><span class='rparen'>)</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_models'>models</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='id identifier rubyid_find_links'>find_links</span><span class='lparen'>(</span><span class='id identifier rubyid_brand'>brand</span><span class='rparen'>)</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
   
     <span class='id identifier rubyid_models'>models</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_model'>model</span><span class='op'>|</span>
@@ -1913,37 +2032,38 @@
       <span class='id identifier rubyid_links_to_visit'>links_to_visit</span> <span class='op'>=</span> <span class='id identifier rubyid_find_links'>find_links</span><span class='lparen'>(</span><span class='id identifier rubyid_model'>model</span><span class='rparen'>)</span>
 
       <span class='kw'>if</span> <span class='id identifier rubyid_links_to_visit'>links_to_visit</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_links_to_visit'>links_to_visit</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
-        <span class='id identifier rubyid_car_data'>car_data</span> <span class='op'>=</span> <span class='id identifier rubyid_scrape_car_data'>scrape_car_data</span><span class='lparen'>(</span><span class='id identifier rubyid_model'>model</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_mutex'>mutex</span><span class='period'>.</span><span class='id identifier rubyid_synchronize'>synchronize</span> <span class='kw'>do</span>
-           <span class='id identifier rubyid_cars'>cars</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_car_data'>car_data</span><span class='rparen'>)</span> 
+        <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_existing_links'>existing_links</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_base_link'>base_link</span><span class='op'>+</span><span class='id identifier rubyid_model'>model</span><span class='rparen'>)</span>
+          <span class='id identifier rubyid_car_data'>car_data</span> <span class='op'>=</span> <span class='id identifier rubyid_scrape_car_data'>scrape_car_data</span><span class='lparen'>(</span><span class='id identifier rubyid_model'>model</span><span class='rparen'>)</span>
+          <span class='id identifier rubyid_mutex'>mutex</span><span class='period'>.</span><span class='id identifier rubyid_synchronize'>synchronize</span> <span class='kw'>do</span>
+            <span class='id identifier rubyid_cars'>cars</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_car_data'>car_data</span><span class='rparen'>)</span> 
+          <span class='kw'>end</span>
+          <span class='id identifier rubyid_mutex'>mutex</span><span class='period'>.</span><span class='id identifier rubyid_synchronize'>synchronize</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_i'>i</span><span class='op'>+=</span><span class='int'>1</span><span class='rbrace'>}</span>
+          <span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_i'>i</span>
+          <span class='kw'>next</span>
         <span class='kw'>end</span>
-        <span class='id identifier rubyid_mutex'>mutex</span><span class='period'>.</span><span class='id identifier rubyid_synchronize'>synchronize</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_i'>i</span><span class='op'>+=</span><span class='int'>1</span><span class='rbrace'>}</span>
-        <span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_i'>i</span>
-        <span class='kw'>next</span>
       <span class='kw'>end</span>
       
       <span class='kw'>while</span> <span class='id identifier rubyid_links_to_visit'>links_to_visit</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span>
-          <span class='id identifier rubyid_link'>link</span> <span class='op'>=</span> <span class='kw'>nil</span>
-          <span class='id identifier rubyid_mutex'>mutex</span><span class='period'>.</span><span class='id identifier rubyid_synchronize'>synchronize</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_link'>link</span> <span class='op'>=</span> <span class='id identifier rubyid_links_to_visit'>links_to_visit</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span> <span class='rbrace'>}</span>
-          <span class='kw'>next</span> <span class='kw'>unless</span> <span class='id identifier rubyid_link'>link</span> 
-          <span class='kw'>begin</span> 
-            <span class='id identifier rubyid_new_links'>new_links</span> <span class='op'>=</span> <span class='id identifier rubyid_find_links'>find_links</span><span class='lparen'>(</span><span class='id identifier rubyid_link'>link</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+        <span class='id identifier rubyid_link'>link</span> <span class='op'>=</span> <span class='kw'>nil</span>
+        <span class='id identifier rubyid_mutex'>mutex</span><span class='period'>.</span><span class='id identifier rubyid_synchronize'>synchronize</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_link'>link</span> <span class='op'>=</span> <span class='id identifier rubyid_links_to_visit'>links_to_visit</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span> <span class='rbrace'>}</span>
+        <span class='kw'>next</span> <span class='kw'>unless</span> <span class='id identifier rubyid_link'>link</span> 
+        <span class='kw'>begin</span> 
+          <span class='id identifier rubyid_new_links'>new_links</span> <span class='op'>=</span> <span class='id identifier rubyid_find_links'>find_links</span><span class='lparen'>(</span><span class='id identifier rubyid_link'>link</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
     
-            <span class='kw'>if</span> <span class='id identifier rubyid_new_links'>new_links</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
-              <span class='id identifier rubyid_car_data'>car_data</span> <span class='op'>=</span> <span class='id identifier rubyid_scrape_car_data'>scrape_car_data</span><span class='lparen'>(</span><span class='id identifier rubyid_link'>link</span><span class='rparen'>)</span>
-              <span class='id identifier rubyid_mutex'>mutex</span><span class='period'>.</span><span class='id identifier rubyid_synchronize'>synchronize</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_cars'>cars</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_car_data'>car_data</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
-              <span class='id identifier rubyid_mutex'>mutex</span><span class='period'>.</span><span class='id identifier rubyid_synchronize'>synchronize</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_i'>i</span><span class='op'>+=</span><span class='int'>1</span><span class='rbrace'>}</span>
-              <span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_i'>i</span>
-            <span class='kw'>else</span>
-              <span class='id identifier rubyid_mutex'>mutex</span><span class='period'>.</span><span class='id identifier rubyid_synchronize'>synchronize</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_links_to_visit'>links_to_visit</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='id identifier rubyid_new_links'>new_links</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
-            <span class='kw'>end</span>
-          <span class='kw'>rescue</span> <span class='const'>StandardError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
-            <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Some error occur while finding links: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_new_links'>new_links</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+          <span class='kw'>if</span> <span class='id identifier rubyid_new_links'>new_links</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_existing_links'>existing_links</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_base_link'>base_link</span><span class='op'>+</span><span class='id identifier rubyid_link'>link</span><span class='rparen'>)</span>
+            <span class='id identifier rubyid_car_data'>car_data</span> <span class='op'>=</span> <span class='id identifier rubyid_scrape_car_data'>scrape_car_data</span><span class='lparen'>(</span><span class='id identifier rubyid_link'>link</span><span class='rparen'>)</span>
+            <span class='id identifier rubyid_mutex'>mutex</span><span class='period'>.</span><span class='id identifier rubyid_synchronize'>synchronize</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_cars'>cars</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_car_data'>car_data</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+            <span class='id identifier rubyid_mutex'>mutex</span><span class='period'>.</span><span class='id identifier rubyid_synchronize'>synchronize</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_i'>i</span><span class='op'>+=</span><span class='int'>1</span><span class='rbrace'>}</span>
+            <span class='id identifier rubyid_puts'>puts</span> <span class='id identifier rubyid_i'>i</span>
+          <span class='kw'>else</span>
+            <span class='id identifier rubyid_mutex'>mutex</span><span class='period'>.</span><span class='id identifier rubyid_synchronize'>synchronize</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_links_to_visit'>links_to_visit</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='id identifier rubyid_new_links'>new_links</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
           <span class='kw'>end</span>
+        <span class='kw'>rescue</span> <span class='const'>StandardError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+          <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Some error occur while finding links: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_new_links'>new_links</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
         <span class='kw'>end</span>
       <span class='kw'>end</span>
     <span class='kw'>end</span>
-  
+  <span class='kw'>end</span>
     <span class='id identifier rubyid_threads'>threads</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:join</span><span class='rparen'>)</span> 
     <span class='kw'>return</span> <span class='id identifier rubyid_cars'>cars</span>
   <span class='kw'>rescue</span> <span class='const'>StandardError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
@@ -2085,7 +2205,7 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Jul 29 06:32:19 2024 by
+  Generated on Tue Jul 30 19:57:03 2024 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.36 (ruby-3.3.2).
 </div>
